@@ -1,0 +1,28 @@
+<div class="kanban-header">
+    <button (click)="openNewTaskModal()">New Task</button>
+    <input placeholder="Search" [(ngModel)]="searchTerm" (input)="filterTasks()" />
+    <select [(ngModel)]="selectedDeveloper" (change)="filterTasks()">
+        <option value="">All Developers</option>
+        <option *ngFor="let dev of developerList">{{ dev }}</option>
+    </select>
+    <select [(ngModel)]="sortColumn" (change)="sortTasks()">
+        <option *ngFor="let col of sortOptions" [value]="col">{{ col }}</option>
+    </select>
+</div>
+
+<div class="kanban-board">
+    <div *ngFor="let status of statusList" class="kanban-column"
+        [ngStyle]="{ 'border-top': '4px solid ' + getStatusColor(status) }">
+        <h3>{{ status }} {{ filteredTasks[status]?.length || 0 }}</h3>
+        <!-- <div class="kanban-card" *ngFor="let task of filteredTasks[status]" cdkDrag
+            (cdkDragEnded)="onDragEnd($event, task)">
+            <h4>{{ task.title }}</h4>
+            <span class="badge" [ngClass]="getPriorityColor(task.priority)">{{ task.priority }}</span>
+            <span class="badge">{{ task.estimatedSP }} SP</span>
+            <span class="badge">{{ task.type }}</span>
+            <div *ngIf="task.developer?.length > 0">{{ task.developer.join(', ') }}</div>
+        </div> -->
+    </div>
+</div>
+
+<!-- <app-new-task-modal *ngIf="showModal" (save)="onSave($event)" (close)="showModal = false"></app-new-task-modal> -->

@@ -1,0 +1,18 @@
+<div class="border p-4 rounded mb-4">
+    <h3 class="text-lg font-semibold mb-2">Tambah Tugas Baru</h3>
+
+    <input [(ngModel)]="newTask.title" placeholder="Judul Tugas" class="border p-2 rounded mb-2 w-full" />
+
+    <input [(ngModel)]="newTask.developer" placeholder="Developer (pisahkan dengan koma)"
+        class="border p-2 rounded mb-2 w-full" />
+
+    <select [(ngModel)]="newTask.priority" class="border p-2 rounded mb-2 w-full">
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+        <option value="Best Effort">Best Effort</option>
+    </select>
+
+    <button (click)="addTask()" class="bg-blue-500 text-white p-2 rounded mt-2">Tambah Tugas</button>
+</div>

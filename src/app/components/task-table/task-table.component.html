@@ -1,0 +1,107 @@
+<!-- task-table.component.html -->
+<div class="p-4 dark bg-[#121633] min-h-screen text-white">
+    <!-- Header & Actions -->
+    <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
+        <div class="flex gap-2">
+            <button (click)="addNewTask()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm">New
+                Task</button>
+            <input class="px-3 py-2 rounded bg-gray-800 border border-gray-600 text-sm w-40" type="text"
+                [(ngModel)]="searchTerm" (input)="onSearchChange()" placeholder="Search by title..." />
+            <select class="px-3 py-2 rounded bg-gray-800 border border-gray-600 text-sm" [(ngModel)]="selectedPerson"
+                (change)="onDeveloperChange()">
+                <option value="">Person</option>
+                <option *ngFor="let dev of uniqueDevelopers" [value]="dev">{{ dev }}</option>
+            </select>
+            <button class="px-4 py-2 bg-gray-700 rounded text-sm" (click)="toggleSort('title')">Sort</button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto border border-gray-700 rounded">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-800 text-left">
+                <tr>
+                    <th>
+                        Title
+                        <span *ngIf="getSortDirection('title') === 'asc'">↑</span>
+                        <span *ngIf="getSortDirection('title') === 'desc'">↓</span>
+                    </th>
+
+                    <th class="p-3">Developer</th>
+                    <th class="p-3">Status</th>
+                    <th class="p-3">Priority</th>
+                    <th class="p-3">Type</th>
+                    <th class="p-3">Date</th>
+                    <th class="p-3">Estimated SP</th>
+                    <th class="p-3">Actual SP</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let task of filteredTasks" class="border-t border-gray-700 hover:bg-gray-800">
+                    <td class="p-3">
+                        <input [(ngModel)]="task.title" class="bg-transparent border-none w-full focus:outline-none" />
+                    </td>
+                    <td class="p-3">
+                        <input [(ngModel)]="task.developer" (blur)="onDeveloperBlur(task)"
+                            class="bg-transparent border border-gray-600 rounded px-2 py-1 text-xs w-full"
+                            placeholder="Alice, Bob">
+                    </td>
+
+                    <td class="p-3">
+                        <select [(ngModel)]="task.status" class="border border-gray-600 rounded px-2 py-1 text-xs"
+                            [ngStyle]="{ 'background-color': getStatusColor(task.status), 'color': '#fff' }">
+                            <option *ngFor="let s of statusList" [value]="s">{{ s }}</option>
+                        </select>
+                    </td>
+
+                    <td class="p-3">
+                        <select [(ngModel)]="task.priority" class="border border-gray-600 rounded px-2 py-1 text-xs"
+                            [ngStyle]="{ 'background-color': getPriorityColor(task.priority), 'color': '#fff' }">
+                            <option *ngFor="let p of priorityList" [value]="p">{{ p }}</option>
+                        </select>
+                    </td>
+
+                    <td class="p-3">
+                        <select [(ngModel)]="task.type" class="border border-gray-600 rounded px-2 py-1 text-xs"
+                            [ngStyle]="{ 'background-color': getTypeColor(task.type), 'color': '#fff' }">
+                            <option *ngFor="let t of typeList" [value]="t">{{ t }}</option>
+                        </select>
+                    </td>
+
+                    <td class="p-3">
+                        <input type="date" [(ngModel)]="task.date"
+                            class="bg-transparent border border-gray-600 rounded px-2 py-1 text-xs" />
+                    </td>
+                    <td class="p-3 text-right">
+                        <input type="number" [(ngModel)]="task.estimatedSP"
+                            class="w-12 bg-transparent border-none text-right" /> SP
+                    </td>
+                    <td class="p-3 text-right">
+                        <input type="number" [(ngModel)]="task.actualSP"
+                            class="w-12 bg-transparent border-none text-right" /> SP
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot class="bg-gray-800">
+                <tr>
+                    <td colspan="6" class="p-3">&nbsp;</td>
+                    <td class="p-3 text-right font-semibold">{{ totalEstimatedSP }} SP sum</td>
+                    <td class="p-3 text-right font-semibold">{{ totalActualSP }} SP sum</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- Legend: Status / Priority / Type -->
+    <div class="mt-4 grid grid-cols-3 gap-4">
+        <div *ngFor="let summary of columnSummaries" class="text-sm">
+            <div class="font-semibold mb-1">{{ summary.label }}</div>
+            <div class="flex gap-2 flex-wrap">
+                <div *ngFor="let item of summary.items" class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded-full" [ngStyle]="{ 'background-color': item.color }"></div>
+                    <div>{{ item.name }} ({{ item.percentage }}%)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
